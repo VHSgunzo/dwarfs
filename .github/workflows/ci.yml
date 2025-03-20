@@ -29,13 +29,9 @@ jobs:
           docker run --privileged --rm tonistiigi/binfmt --uninstall qemu-*
           docker run --privileged --rm tonistiigi/binfmt --install all
 
-      - name: Build x86_64
+      - name: Build
         run: |
-          ./build.sh amd64
-
-      - name: Build aarch64
-        run: |
-          ./build.sh arm64v8
+          ./build.sh
 
       - name: Release
         uses: softprops/action-gh-release@v1
