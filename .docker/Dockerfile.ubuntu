@@ -1,6 +1,5 @@
 # syntax=docker/dockerfile:1
-ARG ARCH=amd64
-FROM $ARCH/ubuntu:24.04
+FROM ubuntu:24.04
 RUN apt update
 RUN apt upgrade -y
 RUN apt install -y gnupg wget software-properties-common
