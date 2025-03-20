@@ -37,6 +37,18 @@ while true; do
     fi
 done
 
+CFLAGS_DEF='-Os -g0 -ffunction-sections -fdata-sections -fmerge-all-constants'
+export LDFLAGS='-Wl,--gc-sections -Wl,--strip-all'
+
+(export CFLAGS="$CFLAGS_DEF -fvisibility=hidden"
+git clone https://github.com/libfuse/libfuse.git && cd libfuse
+git checkout fuse-3.16.2
+mkdir build && cd build
+meson setup .. --default-library=static
+ninja
+mv -fv lib/libfuse3.a /usr/lib/$(uname -m)-linux-gnu/)
+rm -rf libfuse
+
 wget https://sourceware.org/pub/bzip2/bzip2-${BZIP2_VERSION}.tar.gz
 wget https://github.com/libarchive/libarchive/releases/download/v${LIBARCHIVE_VERSION}/libarchive-${LIBARCHIVE_VERSION}.tar.xz
 wget https://github.com/xiph/flac/releases/download/${FLAC_VERSION}/flac-${FLAC_VERSION}.tar.xz
@@ -62,12 +74,16 @@ for COMPILER in clang gcc; do
 
     INSTALL_DIR=/opt/static-libs/$COMPILER
 
+    export CFLAGS="$CFLAGS_DEF"
+
     cd "$HOME/pkgs/$COMPILER"
     tar xf ../libunwind-${LIBUNWIND_VERSION}.tar.gz
     cd libunwind-${LIBUNWIND_VERSION}
     ./configure --prefix="$INSTALL_DIR"
     make -j$(nproc)
     make install
+
+    export CFLAGS="$CFLAGS_DEF -fvisibility=hidden"
 
     cd "$HOME/pkgs/$COMPILER"
     tar xf ../bzip2-${BZIP2_VERSION}.tar.gz

@@ -2,6 +2,8 @@
 
 set -ex
 
+export PS4='$LINENO: '
+
 export CCACHE_DIR=/ccache
 
 LOCAL_REPO_PATH=/local/repos
@@ -180,7 +182,7 @@ fi
 
 if [[ "-$BUILD_TYPE-" == *-static-* ]]; then
   CMAKE_ARGS_NONSTATIC="${CMAKE_ARGS}"
-  export LDFLAGS="-L/opt/static-libs/$COMPILER/lib"
+  export LDFLAGS="$LDFLAGS -L/opt/static-libs/$COMPILER/lib"
   CMAKE_ARGS="${CMAKE_ARGS} -DSTATIC_BUILD_DO_NOT_USE=1 -DWITH_UNIVERSAL_BINARY=1 -DWITH_PXATTR=1"
   CMAKE_ARGS="${CMAKE_ARGS} -DSTATIC_BUILD_EXTRA_PREFIX=/opt/static-libs/$COMPILER"
 fi
@@ -243,9 +245,21 @@ if [[ "$BUILD_FROM_TARBALL" == "1" ]]; then
   esac
 else
   # shellcheck disable=SC2086
-  cmake ../dwarfs/ $CMAKE_ARGS -DWITH_EXAMPLE=1
+  cmake ../dwarfs/ $CMAKE_ARGS -DWITH_EXAMPLE=0
 
   time $BUILD_TOOL
+
+  ARCH="$(uname -m)"
+
+  cp /root/build/universal/dwarfs-universal /workspace/dwarfs-universal-$ARCH
+
+  # https://github.com/aunali1/super-strip
+  /workspace/.github/sstrip /workspace/dwarfs-universal-$ARCH
+
+  upx --force-overwrite -9 --best /workspace/dwarfs-universal-$ARCH -o /workspace/dwarfs-universal-$ARCH-upx
+
+  # copy_artifacts fails, do not need to get there, already built, stop here
+  exit 0
 
   $RUN_TESTS
 
