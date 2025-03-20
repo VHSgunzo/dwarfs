@@ -6,10 +6,12 @@ cd "$HOME"
 mkdir pkgs
 cd pkgs
 
-GCC="${1:-gcc}"
-CLANG="${2:-clang}"
+# GCC="${1:-gcc}"
+CLANG="${1:-clang}"
+export MAKEFLAGS="-j$(nproc)"
 
-echo "Using $GCC and $CLANG"
+# echo "Using $GCC and $CLANG"
+echo "Using $CLANG"
 
 FILE_VERSION=5.46
 FILE_SHA512=a6cb7325c49fd4af159b7555bdd38149e48a5097207acbe5e36deb5b7493ad6ea94d703da6e0edece5bb32959581741f4213707e5cb0528cd46d75a97a5242dc
@@ -57,7 +59,8 @@ wget https://github.com/google/benchmark/archive/refs/tags/v${BENCHMARK_VERSION}
 wget https://github.com/openssl/openssl/releases/download/openssl-${OPENSSL_VERSION}/openssl-${OPENSSL_VERSION}.tar.gz
 wget https://github.com/jeremy-rifkin/cpptrace/archive/refs/tags/v${CPPTRACE_VERSION}.tar.gz
 
-for COMPILER in clang gcc; do
+# for COMPILER in clang gcc; do
+for COMPILER in clang; do
     if [[ "$COMPILER" == "clang" ]]; then
         export CC="$CLANG"
         export CXX="${CLANG/clang/clang++}"

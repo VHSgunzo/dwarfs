@@ -14,12 +14,13 @@ for BUILD_ARCH in arm64 amd64
 
     # Build dwarfs
     cd "$DIR_SCRIPT"
-    docker run --rm --user 0:0 \
+    docker run --rm \
       --mount type=bind,source="$PWD",target=/workspace \
       --env BUILD_TYPE=clang-release-notest-ninja-static-build \
       --env BUILD_ARCH="$BUILD_ARCH" \
       --env BUILD_DIST=ubuntu \
       --env CFLAGS='-Os -g0 -ffunction-sections -fdata-sections -fvisibility=hidden -fmerge-all-constants' \
       --env LDFLAGS='-Wl,--gc-sections -Wl,--strip-all' \
+      --env MAKEFLAGS="-j$(nproc)" \
       dwarfs
 done
