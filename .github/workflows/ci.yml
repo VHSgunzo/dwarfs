@@ -22,18 +22,20 @@ jobs:
           fetch-depth: '0'
           ref: ${{ github.ref }}
 
-      - name: Install deps
-        run: |
-          sudo sh -c 'apt update && apt install qemu-user-static -y'
-          docker pull tonistiigi/binfmt:latest
-          docker run --privileged --rm tonistiigi/binfmt --uninstall qemu-*
-          docker run --privileged --rm tonistiigi/binfmt --install all
+      # - name: Install deps
+      #   run: |
+      #     sudo sh -c 'apt update && apt install qemu-user-static -y'
+      #     docker pull tonistiigi/binfmt:latest
+      #     docker run --privileged --rm tonistiigi/binfmt --uninstall qemu-*
+      #     docker run --privileged --rm tonistiigi/binfmt --install all
 
-      - name: Build
+      - name: Build x86_64
         run: |
-          ./build.sh amd64 &
-          ./build.sh arm64 &
-          wait
+          ./build.sh amd64
+
+      # - name: Build aarch64
+      #   run: |
+      #     ./build.sh arm64
 
       - name: Release
         uses: softprops/action-gh-release@v1
