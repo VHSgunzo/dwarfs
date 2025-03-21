@@ -31,7 +31,9 @@ jobs:
 
       - name: Build
         run: |
-          ./build.sh
+          ./build.sh amd64 &
+          ./build.sh arm64 &
+          wait
 
       - name: Release
         uses: softprops/action-gh-release@v1
