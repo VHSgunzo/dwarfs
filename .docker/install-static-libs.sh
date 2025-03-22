@@ -87,6 +87,7 @@ for COMPILER in clang; do
     make install
 
     export CFLAGS="$CFLAGS_DEF -fvisibility=hidden"
+    export CXXFLAGS="$CFLAGS"
 
     cd "$HOME/pkgs/$COMPILER"
     tar xf ../bzip2-${BZIP2_VERSION}.tar.gz

@@ -146,6 +146,8 @@ esac
 
 if [[ "-$BUILD_TYPE-" == *-O2-* ]]; then
   CMAKE_ARGS="${CMAKE_ARGS} -DDWARFS_OPTIMIZE=2"
+elif [[ "-$BUILD_TYPE-" == *-Os-* ]]; then
+  CMAKE_ARGS="${CMAKE_ARGS} -DDWARFS_OPTIMIZE=s"
 fi
 
 if [[ "-$BUILD_TYPE-" == *-nojemalloc-* ]]; then
